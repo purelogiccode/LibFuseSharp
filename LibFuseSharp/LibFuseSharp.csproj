@@ -16,7 +16,7 @@
         <Authors>PureLogicCode.com</Authors>
         <Company>PureLogicCode.com</Company>
         <Copyright>Copyright (C) 2026 Peterson Fernandes / PureLogicCode.com</Copyright>
-        <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/purelogiccode/LibFuseSharp</PackageProjectUrl>
         <RepositoryUrl>https://github.com/purelogiccode/LibFuseSharp</RepositoryUrl>
         <RepositoryType>git</RepositoryType>

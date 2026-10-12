@@ -1,7 +1,7 @@
 # LibFuseSharp
 
 [![NuGet](https://img.shields.io/nuget/v/LibFuseSharp.svg?label=NuGet)](https://www.nuget.org/packages/LibFuseSharp/)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/purelogiccode/LibFuseSharp/blob/master/LICENSE.txt)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/purelogiccode/LibFuseSharp/blob/master/LICENSE.txt)
 [![.NET 8 | 9 | 10](https://img.shields.io/badge/.NET-8%20%7C%209%20%7C%2010-512bd4.svg?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/download/dotnet)
 
 A FUSE 3 high-level mount library for .NET on Linux ([libfuse3](https://github.com/libfuse/libfuse))
@@ -76,4 +76,5 @@ and unimplemented operations fail with `ENOSYS`.
 
 ## License
 
-GPLv3 — see [LICENSE.txt](https://github.com/purelogiccode/LibFuseSharp/blob/master/LICENSE.txt).
+MIT — see [LICENSE.txt](https://github.com/purelogiccode/LibFuseSharp/blob/master/LICENSE.txt).
+Lead Developer: Peterson Fernandes ([PureLogicCode.com](https://www.purelogiccode.com)).

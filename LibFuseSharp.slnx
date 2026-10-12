@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="LibFuseSharp.Tests/LibFuseSharp.Tests.csproj" />
+  <Project Path="LibFuseSharp/LibFuseSharp.csproj" />
+</Solution>

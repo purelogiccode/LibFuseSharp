@@ -1,0 +1,37 @@
+# Build outputs
+**/bin/
+**/obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.cache
+
+# IDE files
+.idea/
+.vs/
+.vscode/
+*.DotSettings.user
+
+# NuGet
+*.nupkg
+# NuGet Symbol Packages
+*.snupkg
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Logs
+*.log
+debug.txt
+
+# OS files
+.DS_Store

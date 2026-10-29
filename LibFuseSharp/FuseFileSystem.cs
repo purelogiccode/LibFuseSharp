@@ -34,6 +34,7 @@ public sealed class FuseFileSystem
     private string _mountPoint = string.Empty;
     private Action? _onMounted;
     private IntPtr _fuseHandle;
+    private bool _initialized;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FuseFileSystem"/> class over a volume.
@@ -94,6 +95,7 @@ public sealed class FuseFileSystem
     {
         _mountPoint = mountPoint;
         _onMounted = onMounted;
+        _initialized = false;
 
         var arguments = BuildArguments(debug);
         var strings = new IntPtr[arguments.Length];
@@ -219,13 +221,21 @@ public sealed class FuseFileSystem
                 using var sighup = PosixSignalRegistration.Create(PosixSignal.SIGHUP, OnPosixSignal);
 
                 var loopResult = FuseInterop.FuseLoop(fuse);
-                if (loopResult != 0)
+                if (IsCleanUnmountResult(loopResult, _initialized))
                 {
-                    Log.Error("fuse_loop failed with {Result}", loopResult);
-                    return 1;
+                    if (loopResult != 0)
+                    {
+                        // ENODEV means the kernel closed the FUSE device because the
+                        // volume was unmounted elsewhere (umount, Finder eject, ...).
+                        // That is a normal way to end a session, not a failure.
+                        Log.Information("The volume was unmounted externally.");
+                    }
+
+                    return 0;
                 }
 
-                return 0;
+                Log.Error("fuse_loop failed with {Result}", loopResult);
+                return 1;
             }
             finally
             {
@@ -237,6 +247,20 @@ public sealed class FuseFileSystem
         {
             FuseInterop.FuseDestroy(fuse);
         }
+    }
+
+    /// <summary>
+    /// Determines whether a <c>fuse_loop</c> result represents a normal end of the
+    /// session. External unmounts close the FUSE device, which makes libfuse's loop
+    /// return <c>-ENODEV</c>; once the session was initialized that is a clean unmount,
+    /// not a failure.
+    /// </summary>
+    /// <param name="loopResult">The value returned by <c>fuse_loop</c>.</param>
+    /// <param name="sessionInitialized">Whether the FUSE <c>init</c> callback ran.</param>
+    /// <returns><see langword="true"/> when the session ended normally; otherwise <see langword="false"/>.</returns>
+    internal static bool IsCleanUnmountResult(int loopResult, bool sessionInitialized)
+    {
+        return loopResult == 0 || (loopResult == -PosixError.Enodev && sessionInitialized);
     }
 
     private void OnPosixSignal(PosixSignalContext context)
@@ -296,6 +320,7 @@ public sealed class FuseFileSystem
     {
         try
         {
+            _initialized = true;
             Log.Information("Mount successful: '{MountPoint}'", _mountPoint);
             Log.Information("Press Ctrl+C or run 'umount' to unmount.");
             _onMounted?.Invoke();

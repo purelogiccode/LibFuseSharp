@@ -20,7 +20,8 @@ Used by [SimpleXisoDrive](https://github.com/purelogiccode/SimpleXisoDrive) and
 - **.NET 8, 9 or 10** runtime.
 
 Set the `LIBFUSESHARP_LIBRARY` environment variable to override the FUSE library path
-used for probing and loading (mainly useful for tests and custom installations).
+used for probing and loading (mainly useful for tests and custom installations). The legacy
+`SIMPLEXISODRIVE_FUSE_LIBRARY` name is still honored as a fallback.
 
 ## Quick start
 
@@ -53,7 +54,9 @@ var exitCode = fs.Run("/mnt/myvolume", debug: false, onMounted: () => Console.Wr
 
 `FuseFileSystem.Run` drives the FUSE session manually and shuts it down cleanly on `Ctrl+C`,
 `SIGTERM` or `SIGHUP`. Call `fs.Exit()` from any thread to request a shutdown (for example
-when your application closes).
+when your application closes). External unmounts (`umount`, `fusermount3 -u`, Finder eject) close
+the FUSE device; `fuse_loop` then returns `-ENODEV`, which is treated as a normal end of the
+session once `init` ran, so `Run` returns `0`.
 
 To check only whether mounting is possible — without printing installation guidance — use:
 

@@ -108,7 +108,10 @@ internal static class FuseInterop
 
     private static IEnumerable<string> EnumerateCandidates()
     {
-        var overridePath = Environment.GetEnvironmentVariable("LIBFUSESHARP_LIBRARY");
+        // LIBFUSESHARP_LIBRARY is the current name; the old SIMPLEXISODRIVE_FUSE_LIBRARY
+        // name is still honored so existing SimpleXisoDrive installations keep working.
+        var overridePath = Environment.GetEnvironmentVariable("LIBFUSESHARP_LIBRARY")
+                           ?? Environment.GetEnvironmentVariable("SIMPLEXISODRIVE_FUSE_LIBRARY");
         if (!string.IsNullOrWhiteSpace(overridePath))
         {
             yield return overridePath;
@@ -502,6 +505,9 @@ internal static class PosixError
 
     /// <summary>Permission denied.</summary>
     public const int Eacces = 13;
+
+    /// <summary>No such device (the FUSE device was closed because the volume was unmounted).</summary>
+    public const int Enodev = 19;
 
     /// <summary>Not a directory.</summary>
     public const int Enotdir = 20;
